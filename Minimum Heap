@@ -1,0 +1,57 @@
+#include <stdio.h>
+
+#define _MAX_SIZE 100001
+#define SWAP(A, B) {int T = A; A = B; B = T;}
+
+void add(int newVal, int *heap, int *hsz){
+	heap[++*hsz] = newVal;
+	//printf("#%d\n", *hsz);
+	int c = *hsz;
+	while (c > 1){
+		if (heap[c] < heap[c >> 1]){
+			SWAP(heap[c], heap[c >> 1]);
+			c >>= 1;
+		}
+		else
+			break;
+	}
+}
+
+int rm(int *heap, int *hsz){
+	int rmVal = heap[1];
+	heap[1] = heap[*hsz];
+	if (*hsz > 0){
+		heap[(*hsz)--] = 0;
+		int p = 1, c;
+		while ((c = p << 1) <= *hsz){ 
+			if (c<*hsz && heap[c] > heap[c + 1]) c++;
+			if (heap[p] > heap[c]){
+				SWAP(heap[p], heap[c]);
+				p = c;
+			}
+			else
+				break;
+		}
+	}
+	return rmVal;
+}
+
+int main(){
+
+	freopen("input.txt", "r", stdin);
+	int N, temp;
+	int heap[_MAX_SIZE] = { 0, };
+	int hsz = 0;
+
+	scanf("%d", &N);
+	while (N--){
+		scanf("%d", &temp);
+		if (temp){
+			add(temp, heap, &hsz);
+		}
+		else{
+			printf("%d\n", rm(heap, &hsz));
+		}
+	}
+	return 0;
+}
