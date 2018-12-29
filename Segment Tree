@@ -1,0 +1,56 @@
+#include <stdio.h>
+
+#define _MAX_N 1000000
+
+typedef long long ll;
+
+void init(ll *sgt, int origin_size){
+	for (int i = origin_size-1; i >0; i--){
+		sgt[i] = sgt[i << 1] + sgt[i << 1 | 1];
+	}
+}
+
+ll sum(ll *sgt, int origin_size, int from, int to){
+	ll sum = 0;
+	origin_size--;
+	for (int l = from + origin_size, r = to + origin_size; l <= r; l >>= 1, r >>= 1){
+		if (l & 1LL) 
+			sum += sgt[l++];
+		if (!(r & 1LL))
+			sum += sgt[r--];
+	}
+	return sum;
+}
+
+void update(ll *sgt, int origin_size, int index, ll value){
+	int i = origin_size + index-1;
+	ll gap = value - sgt[i];
+	while (i > 0){
+		sgt[i] += gap;
+		i >>= 1;
+	}
+}
+
+int main(){
+
+	freopen("input.txt", "r", stdin);
+	int N, M, K, temp; 
+	scanf("%d %d %d", &N, &M, &K);
+	ll sgt[100] = { 0, };
+	for (int i = 0; i < N; i++)
+		scanf("%d", &sgt[N+i]);
+	init(sgt, N);
+	/*printf("init\n");
+	prnt(sgt, N);*/
+	int comm_size = M + K, comm, b; ll c;
+	while (comm_size--){
+		scanf("%d %d %d", &comm, &b, &c);
+		if (comm - 1){
+			printf("%d\n", sum(sgt, N, b, c));
+		}
+		else{
+			update(sgt, N, b, c); 
+		}
+	}
+	return 0;
+}
