@@ -37,8 +37,6 @@ int rm(int *heap, int *hsz){
 }
 
 int main(){
-
-	freopen("input.txt", "r", stdin);
 	int N, temp;
 	int heap[_MAX_SIZE] = { 0, };
 	int hsz = 0;
